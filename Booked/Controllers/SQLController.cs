@@ -24,55 +24,55 @@ namespace Booked.Controllers
         /// </summary>
         /// <param name="bookId"></param>
         /// <returns></returns>
-        public static void PostNewDBBook(Book book)
+        public static int PostNewDBBook(BookPostInfo book)
         {
-            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            try
             {
-                if (String.IsNullOrEmpty(book.Title))
-                    throw new Exception("Author field is empty");
-
-                if (String.IsNullOrEmpty(book.Author))
-                    throw new Exception("Author field is empty");
-
-                if (String.IsNullOrEmpty(book.Publisher))
-                    throw new Exception("Author field is empty");
-
-                if (book.Year != null)
-                    throw new Exception("Author field is empty");
-
-                try
+                using (SQLiteConnection con = new SQLiteConnection(LoadConnectionString()))
                 {
-                    cnn.Execute("INSERT into books (title, author, year, publisher, description) value (@Title, @Author, @Year, @Publisher, @Description)", book);
+                    con.Execute("INSERT INTO books (title, author, year, publisher, description) VALUES (@Title, @Author, @Year, @Publisher, @Description)", book);
+
+                    string sql = @"SELECT MAX(id) FROM books";
+                    long lastId = (long)con.ExecuteScalar(sql);
+
+                    return (int)lastId;
                 }
-                catch (Exception ex)
-                {
-                    throw new Exception(ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 
         #region GET
 
         /// <summary>
-        /// 
+        /// Returns all the books in the database
         /// </summary>
         /// <param name="author"></param>
         /// <param name="publisher"></param>
         /// <param name="year"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static List<Book> GetDBBooks(string author, string publisher, int year)
+        public static List<Book> GetDBBooks()
         {
-            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            try
             {
-                var output = cnn.Query<Book>("SELECT * from books", new DynamicParameters());
+                using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+                {
+                    var output = con.Query<Book>("SELECT * from books", new DynamicParameters());
 
-                return output.ToList();
+                    return output.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 
         /// <summary>
-        /// 
+        /// Returns book by id
         /// </summary>
         /// <param name="author"></param>
         /// <param name="publisher"></param>
@@ -81,11 +81,18 @@ namespace Booked.Controllers
         /// <exception cref="Exception"></exception>
         public static Book GetDBBookById(int bookId)
         {
-            using (var cnn = new SQLiteConnection(LoadConnectionString()))
+            try
             {
-                var output = cnn.Query<Book>("SELECT * from books WHERE id = @id", new { id = bookId });
+                using (var con = new SQLiteConnection(LoadConnectionString()))
+                {
+                    var output = con.Query<Book>("SELECT * from books WHERE id = @id", new { id = bookId });
 
-                return output.First();
+                    return output.First();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 
@@ -95,40 +102,40 @@ namespace Booked.Controllers
         /// <returns></returns>
         public static List<Book> GetAllDBBooks()
         {
-            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            try
             {
-                var output = cnn.Query<Book>("select * from books", new DynamicParameters());
+                using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+                {
+                    var output = con.Query<Book>("select * from books", new DynamicParameters());
 
-                return output.ToList();
+                    return output.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        //public static List<Book> GetAllDBBooks()
-        //{
-        //    using (IDbConnection cnn = new SqliteConnection(LoadConnectionString()))
-        //    {
-        //        var output = cnn.Query<Book>("select * from books", new DynamicParameters());
-
-        //        return output.ToList();
-        //    }
-        //}
 
         #endregion GET
 
         /// <summary>
-        /// 
+        /// Delete book based on given id
         /// </summary>
         /// <param name="bookId"></param>
         /// <returns></returns>
         public static void DeleteDBBookById(int bookId)
         {
-            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            try
             {
-                var output = cnn.Query<Book>("DELETE * from books WHERE id = @id", new { id = bookId });
+                using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+                {
+                    var output = con.Query<Book>("DELETE FROM books WHERE id = @id", new { id = bookId });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }
