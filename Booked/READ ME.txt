@@ -34,6 +34,6 @@ TODO and improvements.
 
 - Implement logging
 
-- Add more comprehensve filter options to SQL string while featching the products.
+- Add more comprehensive filter options to SQL string while featching the products.
 
-- Some nice launch
+- Some nice easy way of lauching the swagger page
