@@ -5,7 +5,9 @@
  Launching the program will open a Swagger page that lets you interact with all the possible endpoints. 
  The books.db database file is included in the program files.
  
- To view the code and lauch the Swagger it is recommended that you download the files and open the them with VS-studio.
+ To view the code and lauch the Swagger it is recommended that you download the files and open the them with Visual Studio.
+ Instructions on starting a program in general can be found here:
+ https://learn.microsoft.com/en-us/visualstudio/get-started/csharp/run-program?view=vs-2022
  
  Users can:
  
