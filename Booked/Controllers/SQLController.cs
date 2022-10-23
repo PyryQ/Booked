@@ -14,12 +14,38 @@ namespace Booked.Controllers
 {
     public class SQLController
     {
+        /// <summary>
+        /// Returns connections string configured in App.config based on id given.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         private static string LoadConnectionString(string id ="Default")
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
         }
 
-        #region GET
+ #region GET
+
+        /// <summary>
+        /// Returns all the books from the database
+        /// </summary>
+        /// <returns></returns>
+        public static List<Book> GetAllDBBooks()
+        {
+            try
+            {
+                using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+                {
+                    var output = con.Query<Book>("select * from books", new DynamicParameters());
+
+                    return output.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
         /// <summary>
         /// Returns book by id
@@ -46,35 +72,16 @@ namespace Booked.Controllers
             }
         }
 
-        /// <summary>
-        /// Returns all the books from the database
-        /// </summary>
-        /// <returns></returns>
-        public static List<Book> GetAllDBBooks()
-        {
-            try
-            {
-                using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
-                {
-                    var output = con.Query<Book>("select * from books", new DynamicParameters());
-
-                    return output.ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
         #endregion GET
+
+        #region POST
 
         /// <summary>
         /// Post a new book into the database. Returns the latest id.
         /// </summary>
         /// <param name="bookId"></param>
         /// <returns></returns>
-        public static int PostNewDBBook(BookPostInfo book)
+        public static int PostNewDBBook(Book book)
         {
             try
             {
@@ -82,8 +89,7 @@ namespace Booked.Controllers
                 {
                     con.Execute("INSERT INTO books (title, author, year, publisher, description) VALUES (@Title, @Author, @Year, @Publisher, @Description)", book);
 
-                    string sql = @"SELECT MAX(id) FROM books";
-                    long lastId = (long)con.ExecuteScalar(sql);
+                    long lastId = (long)con.ExecuteScalar("SELECT MAX(id) FROM books");
 
                     return (int)lastId;
                 }
@@ -93,6 +99,10 @@ namespace Booked.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
+        #endregion POST
+
+        #region DELETE
 
         /// <summary>
         /// Delete book based on given id
@@ -113,5 +123,7 @@ namespace Booked.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
+        #endregion DELETE
     }
 }

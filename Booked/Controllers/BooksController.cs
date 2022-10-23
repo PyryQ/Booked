@@ -10,11 +10,11 @@ namespace Booked.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class BooksAPIController : ControllerBase
+    public class BooksController : ControllerBase
     {
-        private readonly ILogger<BooksAPIController> _logger;
+        private readonly ILogger<BooksController> _logger;
 
-        public BooksAPIController(ILogger<BooksAPIController> logger)
+        public BooksController(ILogger<BooksController> logger)
         {
             _logger = logger;
         }
@@ -22,9 +22,9 @@ namespace Booked.Controllers
         [HttpGet]
         public IActionResult GetAllBooks(string? author, int? year, string? publisher)
         {
-            var queryProblems = ValidationFunctions.PossibleQueryProblems(author, year, publisher);
+            var queryProblems = BookValidator.PossibleQueryProblems(author, year, publisher);
 
-            if (queryProblems == String.Empty)
+            if (queryProblems == String.Empty) //No problems with query parameters
             {
                 var books = SQLController.GetAllDBBooks();
 
@@ -54,7 +54,10 @@ namespace Booked.Controllers
         public IActionResult GetBookById(int bookId)
         {
             if (bookId < 1)
-                throw new Exception("Invalid bookId");
+            {
+                Response.StatusCode = 400;
+                return Content("Invalid book id.");
+            }
 
             var book = SQLController.GetDBBookById(bookId);
 
@@ -64,13 +67,13 @@ namespace Booked.Controllers
         }
 
         [HttpPost]
-        public IActionResult PostNewBook([FromBody]BookPostInfo newBook)
+        public IActionResult PostNewBook([FromBody]Book newBook)
         {
             try
             {
-                var problems = ValidationFunctions.PossibleBookProblems(newBook);
+                var problems = BookValidator.PossibleBookProblems(newBook);
 
-                if (problems == String.Empty)
+                if (problems == String.Empty) //No problems with new book
                 {
                     var latestId = SQLController.PostNewDBBook(newBook);
 
@@ -84,8 +87,7 @@ namespace Booked.Controllers
                 {
                     Response.StatusCode = 400;
                     return Content(problems);
-                }
-            
+                }        
             }
             catch (Exception ex)
             { 
@@ -100,7 +102,8 @@ namespace Booked.Controllers
             {
                 SQLController.DeleteDBBookById(bookId);
 
-                return Ok($"");
+                Response.StatusCode = 204;
+                return Content(string.Empty);
             }
             catch (Exception ex)
             {

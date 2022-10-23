@@ -3,14 +3,14 @@ using Booked.Controllers;
 
 namespace Booked.SupportClasses
 {
-    public class ValidationFunctions
+    public class BookValidator
     {
         /// <summary>
         /// Collects problems with the book and adds it to a string. Returns empty string if no problems found.
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        public static string PossibleBookProblems(BookPostInfo book)
+        public static string PossibleBookProblems(Book book)
         {
             var problems = String.Empty;
 
@@ -28,7 +28,7 @@ namespace Booked.SupportClasses
             var identicalBooksFound = books.Where(i => i.Title == book.Title && i.Year == book.Year && i.Author == book.Author).Any();
 
             if (identicalBooksFound)
-                problems += "Book with same info found already.";
+                problems += "Book with same title, author and year found already.";
 
             return problems;
         }
