@@ -37,3 +37,5 @@ TODO and improvements.
 - Add more comprehensive filter options to SQL string while featching the products.
 
 - Some nice easy way of lauching the swagger page
+
+- Instead of one string for possible problems, could be implemented as string list perhaps. Or returning succes bool and problems as string on the validators
