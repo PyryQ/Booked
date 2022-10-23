@@ -19,8 +19,10 @@ namespace Booked.Controllers
             _logger = logger;
         }
 
+        #region GET
+
         [HttpGet]
-        public IActionResult GetAllBooks(string? author, int? year, string? publisher)
+        public IActionResult GetAllBooks(string? author, decimal? year, string? publisher)
         {
             var queryProblems = BookValidator.PossibleQueryProblems(author, year, publisher);
 
@@ -51,20 +53,33 @@ namespace Booked.Controllers
 
         [HttpGet]
         [Route("/{bookId}")]
-        public IActionResult GetBookById(int bookId)
+        public IActionResult GetBookById(decimal bookId)
         {
-            if (bookId < 1)
+            try
             {
-                Response.StatusCode = 400;
-                return Content("Invalid book id.");
+                if (BookValidator.IsInteger(bookId))
+                {
+                    var book = SQLController.GetDBBookById((int)bookId);
+
+                    var bookJson = JsonSerializer.Serialize(book);
+
+                    return Ok(bookJson);
+                }
+                else 
+                {
+                    Response.StatusCode = 400;
+                    return Content("BookId needs to be an integer.");
+                }
             }
-
-            var book = SQLController.GetDBBookById(bookId);
-
-            var bookJson = JsonSerializer.Serialize(book);
-
-            return Ok(bookJson);
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
+
+        #endregion GET
+
+        #region POST
 
         [HttpPost]
         public IActionResult PostNewBook([FromBody]Book newBook)
@@ -95,20 +110,34 @@ namespace Booked.Controllers
             }
         }
 
+        #endregion POST
+
+        #region DELETE
+
         [HttpDelete]
-        public IActionResult DeleteBook(int bookId)
+        public IActionResult DeleteBook(decimal bookId)
         {
             try
             {
-                SQLController.DeleteDBBookById(bookId);
+                if (BookValidator.IsInteger(bookId))
+                {
+                    SQLController.DeleteDBBookById((int)bookId);
 
-                Response.StatusCode = 204;
-                return Content(string.Empty);
+                    Response.StatusCode = 204;
+                    return Content(string.Empty);
+                }
+                else 
+                {
+                    Response.StatusCode = 400;
+                    return Content("BookId needs to be an integer.");
+                }              
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
+        #endregion DELETE
     }
 }

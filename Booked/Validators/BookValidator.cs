@@ -40,7 +40,7 @@ namespace Booked.SupportClasses
         /// <param name="year"></param>
         /// <param name="publisher"></param>
         /// <returns></returns>
-        public static string PossibleQueryProblems(string? author, int? year, string? publisher)
+        public static string PossibleQueryProblems(string? author, decimal? year, string? publisher)
         {
             var problems = String.Empty;
 
@@ -58,14 +58,16 @@ namespace Booked.SupportClasses
 
             if (year != null)
             {
-                //int i = 0;
-                //var correctYear = int.TryParse(year, out i);
-
-                //if (correctYear == false)
-                //    problems += "Incorrect year. ";
+                if (BookValidator.IsInteger((decimal)year) == false)
+                    problems += "Year needs to be an integer.";
             }
 
             return problems;
+        }
+
+        public static bool IsInteger(decimal bookId)
+        {
+            return ((bookId % 1) == 0);
         }
     }
 }

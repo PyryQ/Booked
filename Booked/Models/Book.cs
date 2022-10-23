@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-
+using System.Runtime.Serialization;
 
 namespace BookCollection.Models
 {
@@ -8,7 +8,7 @@ namespace BookCollection.Models
         /// <summary>
         /// Int identifier for the book
         /// </summary>
-        private int Id { get; set; }
+        public int Id { get; set; }
 
         public string Title { get; set; }
 

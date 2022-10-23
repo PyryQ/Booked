@@ -1,0 +1,37 @@
+ 
+ `•.¸¸.•´´¯`••._.• BOOKED •._.••`¯´´•.¸¸.•`
+ 
+ This is a small Book library API that connects to a SQLite database.
+ Launching the program will open a Swagger page that lets you interact with all the possible endpoints. 
+ The books.db database file is included in the program files.
+ 
+ To view the code and lauch the Swagger it is recommended that you download the files and open the them with VS-studio.
+ 
+ Users can:
+ 
+ - GET all the books with possibility to query using author, year or publisher.
+ - GET book based on integer id.
+ - POST new books with json object
+ - DELETE books based on integer id
+ 
+ 
+ Info on the books is the following:
+ 
+“id": read only integer id, that works as an identifier
+"title": mandatory title text
+"author": mandatory aurtor text
+"year": mandatory integer publishing year
+"publisher": mandatory publisher text
+"description": optional description text
+
+
+
+TODO and improvements.
+
+- Add constraint to the database that checks if book with same title, author and year excists. Now this is checked only in API.
+
+- Implement logging
+
+- Add more comprehensve filter options to SQL string while featching the products.
+
+- Some nice launch
