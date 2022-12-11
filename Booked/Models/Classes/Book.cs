@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Runtime.Serialization;
 
-namespace BookCollection.Models
+namespace Booked.Models.Classes
 {
     public class Book
     {

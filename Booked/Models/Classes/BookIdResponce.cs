@@ -1,4 +1,4 @@
-﻿namespace Booked.Models
+﻿namespace Booked.Models.Classes
 {
     public class BookIdResponce
     {

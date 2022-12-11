@@ -1,36 +1,39 @@
-﻿using BookCollection.Models;
-using Booked.Controllers;
+﻿using Booked.Controllers;
+using Booked.Models.Interfaces;
 
 namespace Booked.SupportClasses
 {
     public class BookValidator
     {
         /// <summary>
-        /// Collects problems with the book and adds it to a string. Returns empty string if no problems found.
+        /// Collects problems with the book and adds it to a string. Returns list of possible problems.
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        public static string PossibleBookProblems(Book book)
+        public static string PossibleBookProblems(IBook book)
         {
-            var problems = String.Empty;
+            var problems = new List<string>();
 
             if (String.IsNullOrEmpty(book.Title))
-                problems += "Title field is empty. ";
+                problems.Add("Title field is empty.");
 
             if (String.IsNullOrEmpty(book.Author))
-                problems += "Author field is empty. ";
+                problems.Add("Author field is empty.");
 
             if (String.IsNullOrEmpty(book.Publisher))
-                problems += "Publisher field is empty. ";
+                problems.Add("Publisher field is empty.");
 
             var books = SQLController.GetAllDBBooks();
 
             var identicalBooksFound = books.Where(i => i.Title == book.Title && i.Year == book.Year && i.Author == book.Author).Any();
 
             if (identicalBooksFound)
-                problems += "Book with same title, author and year found already.";
+                problems.Add("Book with same title, author and year found already.");
 
-            return problems;
+            if (problems.Any())
+                return String.Join(" ", problems.ToArray());
+            else
+                return String.Empty;
         }
 
         /// <summary>

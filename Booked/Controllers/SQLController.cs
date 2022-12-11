@@ -1,4 +1,5 @@
-﻿using BookCollection.Models;
+﻿using Booked.Models;
+using Booked.Models.Interfaces;
 using Dapper;
 using System;
 using System.Collections.Generic;
@@ -30,13 +31,13 @@ namespace Booked.Controllers
         /// Returns all the books from the database
         /// </summary>
         /// <returns></returns>
-        public static List<Book> GetAllDBBooks()
+        public static List<IBook> GetAllDBBooks()
         {
             try
             {
                 using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
                 {
-                    var output = con.Query<Book>("select * from books", new DynamicParameters());
+                    var output = con.Query<IBook>("select * from books", new DynamicParameters());
 
                     return output.ToList();
                 }
@@ -55,13 +56,13 @@ namespace Booked.Controllers
         /// <param name="year"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static Book GetDBBookById(int bookId)
+        public static IBook GetDBBookById(int bookId)
         {
             try
             {
                 using (var con = new SQLiteConnection(LoadConnectionString()))
                 {
-                    var output = con.Query<Book>("SELECT * from books WHERE id = @id", new { id = bookId });
+                    var output = con.Query<IBook>("SELECT * from books WHERE id = @id", new { id = bookId });
 
                     return output.First();
                 }
@@ -81,7 +82,7 @@ namespace Booked.Controllers
         /// </summary>
         /// <param name="bookId"></param>
         /// <returns></returns>
-        public static int PostNewDBBook(Book book)
+        public static int PostNewDBBook(IBook book)
         {
             try
             {
@@ -115,7 +116,7 @@ namespace Booked.Controllers
             {
                 using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
                 {
-                    var output = con.Query<Book>("DELETE FROM books WHERE id = @id", new { id = bookId });
+                    var output = con.Query<IBook>("DELETE FROM books WHERE id = @id", new { id = bookId });
                 }
             }
             catch (Exception ex)

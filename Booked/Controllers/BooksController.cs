@@ -1,5 +1,5 @@
-﻿using BookCollection.Models;
-using Booked.Models;
+﻿using Booked.Models.Classes;
+using Booked.Models.Interfaces;
 using Booked.SupportClasses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -82,13 +82,13 @@ namespace Booked.Controllers
         #region POST
 
         [HttpPost]
-        public IActionResult PostNewBook([FromBody]Book newBook)
+        public IActionResult PostNewBook([FromBody]IBook newBook)
         {
             try
             {
                 var problems = BookValidator.PossibleBookProblems(newBook);
 
-                if (problems == String.Empty) //No problems with new book
+                if (String.IsNullOrWhiteSpace(problems)) //No problems with new book
                 {
                     var latestId = SQLController.PostNewDBBook(newBook);
 
