@@ -45,27 +45,30 @@ namespace Booked.SupportClasses
         /// <returns></returns>
         public static string PossibleQueryProblems(string? author, decimal? year, string? publisher)
         {
-            var problems = String.Empty;
+            var problems = new List<string>();
 
             if (author != null)
             {
                 if (author == "")
-                    problems += "Author field is empty. ";
+                    problems.Add("Author field is empty.");
             }
 
             if (publisher != null)
             {
                 if (publisher == "")
-                    problems += "Publisher field is empty. ";
+                    problems.Add("Publisher field is empty.");
             }
 
             if (year != null)
             {
                 if (BookValidator.IsInteger((decimal)year) == false)
-                    problems += "Year needs to be an integer.";
+                    problems.Add("Year needs to be an integer.");
             }
 
-            return problems;
+            if (problems.Any())
+                return String.Join(" ", problems.ToArray());
+            else
+                return String.Empty;
         }
 
         public static bool IsInteger(decimal bookId)
