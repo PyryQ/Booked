@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Booked.Models.Interfaces;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 
 namespace Booked.Models.Classes
 {
-    public class Book
+    public class Book : IBook
     {
         /// <summary>
         /// Int identifier for the book
