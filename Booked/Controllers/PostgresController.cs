@@ -1,4 +1,5 @@
 ﻿using Booked.Models;
+using Booked.Models.Classes;
 using Booked.Models.Interfaces;
 using Dapper;
 using System;
@@ -13,7 +14,7 @@ using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 namespace Booked.Controllers
 {
-    public class SQLController
+    public class PostgresController
     {
         /// <summary>
         /// Returns connections string configured in App.config based on id given.
@@ -24,6 +25,12 @@ namespace Booked.Controllers
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
         }
+        private readonly BookDataContext context;
+
+        public PostgresController(BookDataContext context)
+        {
+            this.context = context;
+        }
 
  #region GET
 
@@ -31,16 +38,13 @@ namespace Booked.Controllers
         /// Returns all the books from the database
         /// </summary>
         /// <returns></returns>
-        public static List<IBook> GetAllDBBooks()
+        public List<IBook> GetAllDBBooks()
         {
             try
             {
-                using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
-                {
-                    var output = con.Query<IBook>("select * from books", new DynamicParameters());
+                var books = this.context.Books.ToList();
 
-                    return output.ToList();
-                }
+                return books.ToList();
             }
             catch (Exception ex)
             {
@@ -56,16 +60,13 @@ namespace Booked.Controllers
         /// <param name="year"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static IBook GetDBBookById(int bookId)
+        public IBook GetDBBookById(int bookId)
         {
             try
             {
-                using (var con = new SQLiteConnection(LoadConnectionString()))
-                {
-                    var output = con.Query<IBook>("SELECT * from books WHERE id = @id", new { id = bookId });
+                var books = this.context.Books.Where(b => b.Id == bookId);
 
-                    return output.First();
-                }
+                return books.First();
             }
             catch (Exception ex)
             {

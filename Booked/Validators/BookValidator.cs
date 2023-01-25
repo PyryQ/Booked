@@ -10,7 +10,7 @@ namespace Booked.SupportClasses
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        public static string PossibleBookProblems(IBook book)
+        public static string PossibleBookProblems(IBook book, SQLiteController SQLController)
         {
             var problems = new List<string>();
 

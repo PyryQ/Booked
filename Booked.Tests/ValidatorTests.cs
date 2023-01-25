@@ -1,11 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Booked;
-using Booked.Controllers;
+﻿using Booked.Controllers;
 using Booked.Models.Classes;
-using Booked.Models.Interfaces;
 using global::Booked.SupportClasses;
 using Xunit;
 
@@ -92,7 +86,7 @@ namespace Booked.Tests
             var book = new Book { Title = "", Author = "Author", Publisher = "Publisher", Year = 2000 };
 
             // Act
-            var result = BookValidator.PossibleBookProblems(book);
+            var result = BookValidator.PossibleBookProblems(book, new SQLiteController());
 
             // Assert
             Assert.Equal("Title field is empty.", result);
@@ -105,7 +99,7 @@ namespace Booked.Tests
             var book = new Book { Title = "Title", Author = "", Publisher = "Publisher", Year = 2000 };
 
             // Act
-            var result = BookValidator.PossibleBookProblems(book);
+            var result = BookValidator.PossibleBookProblems(book, new SQLiteController());
 
             // Assert
             Assert.Equal("Author field is empty.", result);
@@ -118,7 +112,7 @@ namespace Booked.Tests
             var book = new Book { Title = "Title", Author = "Author", Publisher = "", Year = 2000 };
 
             // Act
-            var result = BookValidator.PossibleBookProblems(book);
+            var result = BookValidator.PossibleBookProblems(book, new SQLiteController());
 
             // Assert
             Assert.Equal("Publisher field is empty.", result);
@@ -147,7 +141,7 @@ namespace Booked.Tests
             var book = new Book { Title = "Title", Author = "Author", Publisher = "Publisher", Year = 2000 };
 
             // Act
-            var result = BookValidator.PossibleBookProblems(book);
+            var result = BookValidator.PossibleBookProblems(book, new SQLiteController());
 
             // Assert
             Assert.Equal(string.Empty, result);

@@ -28,7 +28,8 @@ namespace Booked.Controllers
 
             if (queryProblems == String.Empty) //No problems with query parameters
             {
-                var books = SQLController.GetAllDBBooks();
+                var controller = new SQLiteController();
+                var books = controller.GetAllDBBooks();
 
                 //Filter the books based on query
                 if (!String.IsNullOrWhiteSpace(author))
@@ -59,7 +60,8 @@ namespace Booked.Controllers
             {
                 if (BookValidator.IsInteger(bookId))
                 {
-                    var book = SQLController.GetDBBookById((int)bookId);
+                    var controller = new SQLiteController();
+                    var book = controller.GetDBBookById((int)bookId);
 
                     var bookJson = JsonSerializer.Serialize(book);
 
@@ -86,11 +88,12 @@ namespace Booked.Controllers
         {
             try
             {
-                var problems = BookValidator.PossibleBookProblems(newBook);
+                var controller = new SQLiteController();
+                var problems = BookValidator.PossibleBookProblems(newBook, controller);
 
                 if (String.IsNullOrWhiteSpace(problems)) //No problems with new book
                 {
-                    var latestId = SQLController.PostNewDBBook(newBook);
+                    var latestId = SQLiteController.PostNewDBBook(newBook);
 
                     var bookId = new BookIdResponce() { id = latestId };
 
@@ -121,7 +124,7 @@ namespace Booked.Controllers
             {
                 if (BookValidator.IsInteger(bookId))
                 {
-                    SQLController.DeleteDBBookById((int)bookId);
+                    SQLiteController.DeleteDBBookById((int)bookId);
 
                     Response.StatusCode = 204;
                     return Content(string.Empty);
