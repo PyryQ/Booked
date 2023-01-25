@@ -95,7 +95,7 @@ namespace Booked.Controllers
                 {
                     var latestId = SQLiteController.PostNewDBBook(newBook);
 
-                    var bookId = new BookIdResponce() { id = latestId };
+                    var bookId = new BookIdResponce(latestId);
 
                     string bookIdJson = JsonSerializer.Serialize<BookIdResponce>(bookId);
 
