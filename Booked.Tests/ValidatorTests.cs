@@ -118,21 +118,21 @@ namespace Booked.Tests
             Assert.Equal("Publisher field is empty.", result);
         }
 
-        //[Fact]
-        //public void PossibleBookProblems_IdenticalBook_BookWithSameTitleAuthorAndYearFoundAlready()
-        //{
-        //    // Arrange
-        //    var book = new Book { Title = "Title", Author = "Author", Publisher = "Publisher", Year = 2000 };
-        //    var identicalBook = new Book { Title = "Title", Author = "Author", Publisher = "Publisher", Year = 2000 };
+        [Fact]
+        public void PossibleBookProblems_IdenticalBook_BookWithSameTitleAuthorAndYearFoundAlready()
+        {
+            // Arrange
+            var book = new Book { Title = "Title", Author = "Author", Publisher = "Publisher", Year = 2000 };
+            var identicalBook = new Book { Title = "Title", Author = "Author", Publisher = "Publisher", Year = 2000 };
 
-        //    SQLController.GetAllDBBooks = () => new List<Book> { identicalBook };
+            SQLiteController.GetAllDBBooks = () => new List<Book> { identicalBook };
 
-        //    // Act
-        //    var result = BookValidator.PossibleBookProblems(book);
+            // Act
+            var result = BookValidator.PossibleBookProblems(book);
 
-        //    // Assert
-        //    Assert.Equal("Book with same title, author and year found already.", result);
-        //}
+            // Assert
+            Assert.Equal("Book with same title, author and year found already.", result);
+        }
 
         [Fact]
         public void PossibleBookProblems_NoProblems_EmptyString()

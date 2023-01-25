@@ -10,7 +10,7 @@ namespace Booked.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class BooksController : ControllerBase
+    public class BooksController : ControllerBase, IBooksController
     {
         private readonly ILogger<BooksController> _logger;
 
@@ -44,7 +44,7 @@ namespace Booked.Controllers
 
                 return Ok(booksJson);
             }
-            else 
+            else
             {
                 Response.StatusCode = 400;
                 return Content(queryProblems);
@@ -65,7 +65,7 @@ namespace Booked.Controllers
 
                     return Ok(bookJson);
                 }
-                else 
+                else
                 {
                     Response.StatusCode = 400;
                     return Content("BookId needs to be an integer.");
@@ -82,7 +82,7 @@ namespace Booked.Controllers
         #region POST
 
         [HttpPost]
-        public IActionResult PostNewBook([FromBody]IBook newBook)
+        public IActionResult PostNewBook([FromBody] IBook newBook)
         {
             try
             {
@@ -98,14 +98,14 @@ namespace Booked.Controllers
 
                     return Ok(bookIdJson);
                 }
-                else 
+                else
                 {
                     Response.StatusCode = 400;
                     return Content(problems);
-                }        
+                }
             }
             catch (Exception ex)
-            { 
+            {
                 throw new Exception(ex.Message);
             }
         }
@@ -126,11 +126,11 @@ namespace Booked.Controllers
                     Response.StatusCode = 204;
                     return Content(string.Empty);
                 }
-                else 
+                else
                 {
                     Response.StatusCode = 400;
                     return Content("BookId needs to be an integer.");
-                }              
+                }
             }
             catch (Exception ex)
             {

@@ -15,6 +15,8 @@ namespace Booked.Controllers
 {
     public class SQLiteController
     {
+        ISqlitedata
+
         /// <summary>
         /// Returns connections string configured in App.config based on id given.
         /// </summary>
