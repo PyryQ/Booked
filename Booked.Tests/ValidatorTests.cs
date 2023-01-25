@@ -86,7 +86,7 @@ namespace Booked.Tests
             var book = new Book { Title = "", Author = "Author", Publisher = "Publisher", Year = 2000 };
 
             // Act
-            var result = BookValidator.PossibleBookProblems(book, new SQLiteController());
+            var result = BookValidator.PossibleBookProblems(book);
 
             // Assert
             Assert.Equal("Title field is empty.", result);
@@ -99,7 +99,7 @@ namespace Booked.Tests
             var book = new Book { Title = "Title", Author = "", Publisher = "Publisher", Year = 2000 };
 
             // Act
-            var result = BookValidator.PossibleBookProblems(book, new SQLiteController());
+            var result = BookValidator.PossibleBookProblems(book);
 
             // Assert
             Assert.Equal("Author field is empty.", result);
@@ -112,7 +112,7 @@ namespace Booked.Tests
             var book = new Book { Title = "Title", Author = "Author", Publisher = "", Year = 2000 };
 
             // Act
-            var result = BookValidator.PossibleBookProblems(book, new SQLiteController());
+            var result = BookValidator.PossibleBookProblems(book);
 
             // Assert
             Assert.Equal("Publisher field is empty.", result);
@@ -141,7 +141,7 @@ namespace Booked.Tests
             var book = new Book { Title = "Title", Author = "Author", Publisher = "Publisher", Year = 2000 };
 
             // Act
-            var result = BookValidator.PossibleBookProblems(book, new SQLiteController());
+            var result = BookValidator.PossibleBookProblems(book);
 
             // Assert
             Assert.Equal(string.Empty, result);

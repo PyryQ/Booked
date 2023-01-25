@@ -31,7 +31,7 @@ namespace Booked.Controllers
         /// Returns all the books from the database
         /// </summary>
         /// <returns></returns>
-        public List<IBook> GetAllDBBooks()
+        public static List<IBook> GetAllDBBooks()
         {
             try
             {
@@ -56,7 +56,7 @@ namespace Booked.Controllers
         /// <param name="year"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public IBook GetDBBookById(int bookId)
+        public static IBook GetDBBookById(int bookId)
         {
             try
             {

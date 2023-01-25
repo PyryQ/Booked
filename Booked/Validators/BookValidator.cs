@@ -10,7 +10,7 @@ namespace Booked.SupportClasses
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        public static string PossibleBookProblems(IBook book, SQLiteController SQLController)
+        public static string PossibleBookProblems(IBook book)
         {
             var problems = new List<string>();
 
@@ -23,7 +23,7 @@ namespace Booked.SupportClasses
             if (String.IsNullOrEmpty(book.Publisher))
                 problems.Add("Publisher field is empty.");
 
-            var books = SQLController.GetAllDBBooks();
+            var books = SQLiteController.GetAllDBBooks();
 
             var identicalBooksFound = books.Where(i => i.Title == book.Title && i.Year == book.Year && i.Author == book.Author).Any();
 

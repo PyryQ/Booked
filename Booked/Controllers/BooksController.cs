@@ -28,8 +28,7 @@ namespace Booked.Controllers
 
             if (queryProblems == String.Empty) //No problems with query parameters
             {
-                var controller = new SQLiteController();
-                var books = controller.GetAllDBBooks();
+                var books = SQLiteController.GetAllDBBooks();
 
                 //Filter the books based on query
                 if (!String.IsNullOrWhiteSpace(author))
@@ -60,8 +59,7 @@ namespace Booked.Controllers
             {
                 if (BookValidator.IsInteger(bookId))
                 {
-                    var controller = new SQLiteController();
-                    var book = controller.GetDBBookById((int)bookId);
+                    var book = SQLiteController.GetDBBookById((int)bookId);
 
                     var bookJson = JsonSerializer.Serialize(book);
 
@@ -88,8 +86,7 @@ namespace Booked.Controllers
         {
             try
             {
-                var controller = new SQLiteController();
-                var problems = BookValidator.PossibleBookProblems(newBook, controller);
+                var problems = BookValidator.PossibleBookProblems(newBook);
 
                 if (String.IsNullOrWhiteSpace(problems)) //No problems with new book
                 {
