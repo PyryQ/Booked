@@ -138,7 +138,7 @@ namespace Booked.Tests
             var book = new Book { Title = "Title", Author = "Author", Publisher = "Publisher", Year = 2000 };
             var identicalBook = new Book { Title = "Title", Author = "Author", Publisher = "Publisher", Year = 2000 };
 
-            SQLiteDataAccess.GetAllDBBooks = () => new List<Book> { identicalBook };
+            _booksController.GetAllDBBooks = () => new List<Book> { identicalBook };
 
             // Act
             var actual = _booksController.PossibleBookProblems(book);
@@ -151,13 +151,14 @@ namespace Booked.Tests
         public void PossibleBookProblems_NoProblems_EmptyString()
         {
             // Arrange
+            var expected = (true, String.Empty);
             var book = new Book { Title = "Title", Author = "Author", Publisher = "Publisher", Year = 2000 };
 
             // Act
-            var result = _booksController.PossibleBookProblems(book);
+            var actual = _booksController.PossibleBookProblems(book);
 
             // Assert
-            Assert.Equal(string.Empty, result);
+            Assert.Equal(expected, actual);
         }
 
         #endregion PossibleBookProblems

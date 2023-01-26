@@ -1,6 +1,5 @@
 ﻿using Booked.Models.Classes;
 using Booked.Models.Interfaces;
-using Booked.SupportClasses;
 using Booked.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
