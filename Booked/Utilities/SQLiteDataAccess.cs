@@ -1,4 +1,5 @@
-﻿using Booked.Models;
+﻿using Booked.Controllers;
+using Booked.Models;
 using Booked.Models.Interfaces;
 using Dapper;
 using System;
@@ -15,22 +16,6 @@ namespace Booked.Utilities
 {
     public class SQLiteDataAccess : IDatabaseDataAccess
     {
-        IDbConnection _connection;
-
-        public SQLiteDataAccess()
-        {
-            _connection = new SQLiteConnection(LoadConnectionString());
-        }
-
-        /// <summary>
-        /// Returns connections string configured in App.config based on id given.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        private string LoadConnectionString(string id = "Default")
-        {
-            return ConfigurationManager.ConnectionStrings[id].ConnectionString;
-        }
 
         #region GET
 
@@ -38,7 +23,7 @@ namespace Booked.Utilities
         /// Returns all the books from the database
         /// </summary>
         /// <returns></returns>
-        public List<IBook> GetAllDBBooks()
+        public List<IBook> GetAllDbBooks()
         {
             try
             {
@@ -62,7 +47,7 @@ namespace Booked.Utilities
         /// <param name="year"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public IBook GetDBBookById(int bookId)
+        public IBook GetDbBookById(int bookId)
         {
             try
             {
@@ -87,15 +72,15 @@ namespace Booked.Utilities
         /// </summary>
         /// <param name="bookId"></param>
         /// <returns></returns>
-        public int PostNewDBBook(IBook book)
+        public int PostNewDbBook(IBook book)
         {
             try
             {
                 using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
                 {
-                    _connection.Execute("INSERT INTO books (title, author, year, publisher, description) VALUES (@Title, @Author, @Year, @Publisher, @Description)", book);
+                    cnn.Execute("INSERT INTO books (title, author, year, publisher, description) VALUES (@Title, @Author, @Year, @Publisher, @Description)", book);
 
-                    long lastId = (long)_connection.ExecuteScalar("SELECT MAX(id) FROM books");
+                    long lastId = (long)cnn.ExecuteScalar("SELECT MAX(id) FROM books");
 
                     return (int)lastId;
                 }
@@ -115,13 +100,13 @@ namespace Booked.Utilities
         /// </summary>
         /// <param name="bookId"></param>
         /// <returns></returns>
-        public void DeleteDBBookById(int bookId)
+        public void DeleteDbBookById(int bookId)
         {
             try
             {
                 using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
                 {
-                    var output = _connection.Query<IBook>("DELETE FROM books WHERE id = @id", new { id = bookId });
+                    var output = cnn.Query<IBook>("DELETE FROM books WHERE id = @id", new { id = bookId });
                 }
             }        
             catch (Exception ex)
@@ -131,5 +116,16 @@ namespace Booked.Utilities
         }
 
         #endregion DELETE
+
+
+        /// <summary>
+        /// Returns connections string configured in App.config based on id given.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private string LoadConnectionString(string id = "Default")
+        {
+            return ConfigurationManager.ConnectionStrings[id].ConnectionString;
+        }
     }
 }

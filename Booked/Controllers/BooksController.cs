@@ -12,14 +12,11 @@ namespace Booked.Controllers
     [Route("[controller]")]
     public class BooksController : ControllerBase, IBooksController
     {
-        private readonly ILogger<BooksController> _logger;
+        private IDatabaseDataAccess _dataAccess;
 
-        private IDatabaseDataAccess _dbController;
-
-        public BooksController(IDatabaseDataAccess dbController, ILogger<BooksController> logger)
+        public BooksController(IDatabaseDataAccess dataAccess)
         {
-            _dbController = dbController;
-            _logger = logger;
+            _dataAccess = dataAccess;
         }
 
         #region GET
@@ -31,7 +28,7 @@ namespace Booked.Controllers
 
             if (queryProblems.isValid) //No problems with query parameters
             {
-                var books = _dbController.GetAllDBBooks();
+                var books = _dataAccess.GetAllDbBooks();
 
                 //Filter the books based on query
                 if (!String.IsNullOrWhiteSpace(author))
@@ -62,7 +59,7 @@ namespace Booked.Controllers
             {
                 if (IsInteger(bookId))
                 {
-                    var book = _dbController.GetDBBookById((int)bookId);
+                    var book = _dataAccess.GetDbBookById((int)bookId);
 
                     var bookJson = JsonSerializer.Serialize(book);
 
@@ -93,7 +90,7 @@ namespace Booked.Controllers
 
                 if (problems.isValid) //No problems with new book
                 {
-                    var latestId = _dbController.PostNewDBBook(newBook);
+                    var latestId = _dataAccess.PostNewDbBook(newBook);
 
                     var bookId = new BookIdResponce(latestId);
 
@@ -124,7 +121,7 @@ namespace Booked.Controllers
             {
                 if (IsInteger(bookId))
                 {
-                    _dbController.DeleteDBBookById((int)bookId);
+                    _dataAccess.DeleteDbBookById((int)bookId);
 
                     Response.StatusCode = 204;
                     return Content(string.Empty);
@@ -164,7 +161,7 @@ namespace Booked.Controllers
                 problems.Add("Publisher field is empty.");
 
 
-            var books = _dbController.GetAllDBBooks();
+            var books = _dataAccess.GetAllDbBooks();
 
             var identicalBooksFound = books.Where(i => i.Title == book.Title && i.Year == book.Year && i.Author == book.Author).Any();
 

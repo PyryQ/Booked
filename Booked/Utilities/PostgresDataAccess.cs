@@ -14,11 +14,11 @@ using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 namespace Booked.Utilities
 {
-    public class PostgresController : IDatabaseController
+    public class PostgresDataAccess : IDatabaseDataAccess
     {
         private readonly BookDataContext context;
 
-        public PostgresController(BookDataContext context)
+        public PostgresDataAccess(BookDataContext context)
         {
             this.context = context;
         }
@@ -39,7 +39,7 @@ namespace Booked.Utilities
         /// Returns all the books from the database
         /// </summary>
         /// <returns></returns>
-        public List<IBook> GetAllDBBooks()
+        public List<IBook> GetAllDbBooks()
         {
             try
             {
@@ -61,7 +61,7 @@ namespace Booked.Utilities
         /// <param name="year"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public IBook GetDBBookById(int bookId)
+        public IBook GetDbBookById(int bookId)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace Booked.Utilities
         /// </summary>
         /// <param name="bookId"></param>
         /// <returns></returns>
-        public int PostNewDBBook(IBook book)
+        public int PostNewDbBook(IBook book)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace Booked.Utilities
         /// </summary>
         /// <param name="bookId"></param>
         /// <returns></returns>
-        public void DeleteDBBookById(int bookId)
+        public void DeleteDbBookById(int bookId)
         {
             try
             {

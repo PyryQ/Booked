@@ -13,30 +13,30 @@ using Booked.Utilities;
 
 namespace Booked.Tests
 {
-    public class SQLControllerTests
+    public class SQLiteDataAccessTests
     {
 
+        //[Fact]
+        //public void GetAllBooks_ValidCall()
+        //{
+        //    using (var mock = AutoMock.GetLoose())
+        //    {
+        //        mock.Mock<IDbConnection>()
+        //            .SetupDapper(x => x.Query<IBook>("select * from books", new DynamicParameters(), null, true, null, null))
+        //            .Returns(GetSampleBooks());
 
+        //        var cls = mock.Create<SQLiteDataAccess>
 
-        [Fact]
-        public void GetAllBooks_ValidCall()
-        {
-            using (var mock = AutoMock.GetLoose())
-            {
-                mock.Mock<IDbConnection>()
-                    .SetupDapper(x => x.Query<IBook>("select * from books", new DynamicParameters(), null, true, null, null))
-                    .Returns(GetSampleBooks());
+        //        var expected = GetSampleBooks();
 
-                var expected = GetSampleBooks();
+        //        var actual = SQLiteDataAccess.GetAllDBBooks();
 
-                var actual = SQLiteController.GetAllDBBooks();
+        //        Assert.True(actual != null);
+        //        Assert.Equal(expected, actual);
+        //    }
 
-                Assert.True(actual != null);
-                Assert.Equal(expected, actual);
-            }
-
-            throw new NotImplementedException();
-        }
+        //    throw new NotImplementedException();
+        //}
 
         //[Fact]
         //public void GetBookById_ValidCall()

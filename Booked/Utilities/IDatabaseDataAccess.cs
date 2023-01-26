@@ -2,11 +2,11 @@
 
 namespace Booked.Utilities
 {
-    public interface IDatabaseController
+    public interface IDatabaseDataAccess
     {
-        void DeleteDBBookById(int bookId);
-        List<IBook> GetAllDBBooks();
-        IBook GetDBBookById(int bookId);
-        int PostNewDBBook(IBook book);
+        void DeleteDbBookById(int bookId);
+        List<IBook> GetAllDbBooks();
+        IBook GetDbBookById(int bookId);
+        int PostNewDbBook(IBook book);
     }
 }
