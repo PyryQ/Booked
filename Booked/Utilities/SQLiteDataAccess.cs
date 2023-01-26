@@ -11,36 +11,40 @@ using System.Text;
 using System.Threading.Tasks;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
 
-namespace Booked.Controllers
+namespace Booked.Utilities
 {
-    public class SQLiteController
+    public class SQLiteDataAccess : IDatabaseDataAccess
     {
-        ISqlitedata
+        IDbConnection _connection;
+
+        public SQLiteDataAccess()
+        {
+            _connection = new SQLiteConnection(LoadConnectionString());
+        }
 
         /// <summary>
         /// Returns connections string configured in App.config based on id given.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        private static string LoadConnectionString(string id ="Default")
+        private string LoadConnectionString(string id = "Default")
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
         }
 
- #region GET
+        #region GET
 
         /// <summary>
         /// Returns all the books from the database
         /// </summary>
         /// <returns></returns>
-        public static List<IBook> GetAllDBBooks()
+        public List<IBook> GetAllDBBooks()
         {
             try
             {
-                using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+                using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
                 {
-                    var output = con.Query<IBook>("select * from books", new DynamicParameters());
-
+                    var output = cnn.Query<IBook>("select * from books", new DynamicParameters());
                     return output.ToList();
                 }
             }
@@ -58,14 +62,13 @@ namespace Booked.Controllers
         /// <param name="year"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static IBook GetDBBookById(int bookId)
+        public IBook GetDBBookById(int bookId)
         {
             try
             {
-                using (var con = new SQLiteConnection(LoadConnectionString()))
+                using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
                 {
-                    var output = con.Query<IBook>("SELECT * from books WHERE id = @id", new { id = bookId });
-
+                    var output = cnn.Query<IBook>("select * from books WHERE id = @id", new DynamicParameters());
                     return output.First();
                 }
             }
@@ -84,15 +87,15 @@ namespace Booked.Controllers
         /// </summary>
         /// <param name="bookId"></param>
         /// <returns></returns>
-        public static int PostNewDBBook(IBook book)
+        public int PostNewDBBook(IBook book)
         {
             try
             {
-                using (SQLiteConnection con = new SQLiteConnection(LoadConnectionString()))
+                using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
                 {
-                    con.Execute("INSERT INTO books (title, author, year, publisher, description) VALUES (@Title, @Author, @Year, @Publisher, @Description)", book);
+                    _connection.Execute("INSERT INTO books (title, author, year, publisher, description) VALUES (@Title, @Author, @Year, @Publisher, @Description)", book);
 
-                    long lastId = (long)con.ExecuteScalar("SELECT MAX(id) FROM books");
+                    long lastId = (long)_connection.ExecuteScalar("SELECT MAX(id) FROM books");
 
                     return (int)lastId;
                 }
@@ -112,15 +115,15 @@ namespace Booked.Controllers
         /// </summary>
         /// <param name="bookId"></param>
         /// <returns></returns>
-        public static void DeleteDBBookById(int bookId)
+        public void DeleteDBBookById(int bookId)
         {
             try
             {
-                using (IDbConnection con = new SQLiteConnection(LoadConnectionString()))
+                using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
                 {
-                    var output = con.Query<IBook>("DELETE FROM books WHERE id = @id", new { id = bookId });
+                    var output = _connection.Query<IBook>("DELETE FROM books WHERE id = @id", new { id = bookId });
                 }
-            }
+            }        
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);

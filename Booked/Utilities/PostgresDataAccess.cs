@@ -12,19 +12,10 @@ using System.Text;
 using System.Threading.Tasks;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
 
-namespace Booked.Controllers
+namespace Booked.Utilities
 {
-    public class PostgresController
+    public class PostgresController : IDatabaseController
     {
-        /// <summary>
-        /// Returns connections string configured in App.config based on id given.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        private static string LoadConnectionString(string id ="Default")
-        {
-            return ConfigurationManager.ConnectionStrings[id].ConnectionString;
-        }
         private readonly BookDataContext context;
 
         public PostgresController(BookDataContext context)
@@ -32,7 +23,17 @@ namespace Booked.Controllers
             this.context = context;
         }
 
- #region GET
+        /// <summary>
+        /// Returns connections string configured in App.config based on id given.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private static string LoadConnectionString(string id = "Default")
+        {
+            return ConfigurationManager.ConnectionStrings[id].ConnectionString;
+        }
+
+        #region GET
 
         /// <summary>
         /// Returns all the books from the database
@@ -42,7 +43,7 @@ namespace Booked.Controllers
         {
             try
             {
-                var books = this.context.Books.ToList();
+                var books = context.Books.ToList();
 
                 return books.ToList();
             }
@@ -64,7 +65,7 @@ namespace Booked.Controllers
         {
             try
             {
-                var books = this.context.Books.Where(b => b.Id == bookId);
+                var books = context.Books.Where(b => b.Id == bookId);
 
                 return books.First();
             }
@@ -83,7 +84,7 @@ namespace Booked.Controllers
         /// </summary>
         /// <param name="bookId"></param>
         /// <returns></returns>
-        public static int PostNewDBBook(IBook book)
+        public int PostNewDBBook(IBook book)
         {
             try
             {
@@ -111,7 +112,7 @@ namespace Booked.Controllers
         /// </summary>
         /// <param name="bookId"></param>
         /// <returns></returns>
-        public static void DeleteDBBookById(int bookId)
+        public void DeleteDBBookById(int bookId)
         {
             try
             {

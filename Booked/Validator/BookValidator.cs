@@ -1,16 +1,30 @@
 ﻿using Booked.Controllers;
 using Booked.Models.Interfaces;
+using Booked.Utilities;
+using System.Data;
+using System.Data.SQLite;
 
 namespace Booked.SupportClasses
 {
     public class BookValidator
     {
+        private readonly ILogger<BooksController> _logger;
+
+        private IDatabaseDataAccess _dbController;
+
+        public BooksValidator(IDatabaseDataAccess dbController, ILogger<BooksController> logger)
+        {
+            _dbController = dbController;
+            _logger = logger;
+        }
+
+
         /// <summary>
         /// Collects problems with the book and adds it to a string. Returns list of possible problems.
         /// </summary>
         /// <param name="book"></param>
         /// <returns></returns>
-        public static string PossibleBookProblems(IBook book)
+        public (bool isValid, string problems) PossibleBookProblems(IBook book)
         {
             var problems = new List<string>();
 
@@ -23,7 +37,8 @@ namespace Booked.SupportClasses
             if (String.IsNullOrEmpty(book.Publisher))
                 problems.Add("Publisher field is empty.");
 
-            var books = SQLiteController.GetAllDBBooks();
+
+            var books = _dbController.GetAllDBBooks();
 
             var identicalBooksFound = books.Where(i => i.Title == book.Title && i.Year == book.Year && i.Author == book.Author).Any();
 
@@ -31,9 +46,9 @@ namespace Booked.SupportClasses
                 problems.Add("Book with same title, author and year found already.");
 
             if (problems.Any())
-                return String.Join(" ", problems.ToArray());
+                return (false, String.Join(" ", problems.ToArray()));
             else
-                return String.Empty;
+                return (true, String.Empty);
         }
 
         /// <summary>
@@ -43,7 +58,7 @@ namespace Booked.SupportClasses
         /// <param name="year"></param>
         /// <param name="publisher"></param>
         /// <returns></returns>
-        public static string PossibleQueryProblems(string? author, decimal? year, string? publisher)
+        public (bool isValid, string problems) PossibleQueryProblems(string? author, decimal? year, string? publisher)
         {
             var problems = new List<string>();
 
@@ -66,9 +81,9 @@ namespace Booked.SupportClasses
             }
 
             if (problems.Any())
-                return String.Join(" ", problems.ToArray());
+                return (false, String.Join(" ", problems.ToArray()));
             else
-                return String.Empty;
+                return (true, String.Empty);
         }
 
         public static bool IsInteger(decimal bookId)

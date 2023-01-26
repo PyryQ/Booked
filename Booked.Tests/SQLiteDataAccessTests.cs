@@ -5,11 +5,11 @@ using Booked.Models.Classes;
 using Booked.Models.Interfaces;
 using Dapper;
 using Xunit;
-using Booked.Controllers;
 using System.Data;
 using Moq;
 using Moq.Dapper;
 using System.Net;
+using Booked.Utilities;
 
 namespace Booked.Tests
 {

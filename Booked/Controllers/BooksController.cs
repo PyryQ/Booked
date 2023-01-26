@@ -1,6 +1,7 @@
 ﻿using Booked.Models.Classes;
 using Booked.Models.Interfaces;
 using Booked.SupportClasses;
+using Booked.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -14,8 +15,11 @@ namespace Booked.Controllers
     {
         private readonly ILogger<BooksController> _logger;
 
-        public BooksController(ILogger<BooksController> logger)
+        private IDatabaseDataAccess _dbController;
+
+        public BooksController(IDatabaseDataAccess dbController, ILogger<BooksController> logger)
         {
+            _dbController = dbController;
             _logger = logger;
         }
 
@@ -24,11 +28,11 @@ namespace Booked.Controllers
         [HttpGet]
         public IActionResult GetAllBooks(string? author, decimal? year, string? publisher)
         {
-            var queryProblems = BookValidator.PossibleQueryProblems(author, year, publisher);
+            var queryProblems = PossibleQueryProblems(author, year, publisher);
 
-            if (queryProblems == String.Empty) //No problems with query parameters
+            if (queryProblems.isValid) //No problems with query parameters
             {
-                var books = SQLiteController.GetAllDBBooks();
+                var books = _dbController.GetAllDBBooks();
 
                 //Filter the books based on query
                 if (!String.IsNullOrWhiteSpace(author))
@@ -47,7 +51,7 @@ namespace Booked.Controllers
             else
             {
                 Response.StatusCode = 400;
-                return Content(queryProblems);
+                return Content(queryProblems.problems);
             }
         }
 
@@ -57,9 +61,9 @@ namespace Booked.Controllers
         {
             try
             {
-                if (BookValidator.IsInteger(bookId))
+                if (IsInteger(bookId))
                 {
-                    var book = SQLiteController.GetDBBookById((int)bookId);
+                    var book = _dbController.GetDBBookById((int)bookId);
 
                     var bookJson = JsonSerializer.Serialize(book);
 
@@ -86,11 +90,11 @@ namespace Booked.Controllers
         {
             try
             {
-                var problems = BookValidator.PossibleBookProblems(newBook);
+                var problems = PossibleBookProblems(newBook);
 
-                if (String.IsNullOrWhiteSpace(problems)) //No problems with new book
+                if (problems.isValid) //No problems with new book
                 {
-                    var latestId = SQLiteController.PostNewDBBook(newBook);
+                    var latestId = _dbController.PostNewDBBook(newBook);
 
                     var bookId = new BookIdResponce(latestId);
 
@@ -101,7 +105,7 @@ namespace Booked.Controllers
                 else
                 {
                     Response.StatusCode = 400;
-                    return Content(problems);
+                    return Content(problems.problems);
                 }
             }
             catch (Exception ex)
@@ -119,9 +123,9 @@ namespace Booked.Controllers
         {
             try
             {
-                if (BookValidator.IsInteger(bookId))
+                if (IsInteger(bookId))
                 {
-                    SQLiteController.DeleteDBBookById((int)bookId);
+                    _dbController.DeleteDBBookById((int)bookId);
 
                     Response.StatusCode = 204;
                     return Content(string.Empty);
@@ -139,5 +143,81 @@ namespace Booked.Controllers
         }
 
         #endregion DELETE
+
+        #region validators
+
+        /// <summary>
+        /// Collects problems with the book and adds it to a string. Returns list of possible problems.
+        /// </summary>
+        /// <param name="book"></param>
+        /// <returns></returns>
+        public (bool isValid, string problems) PossibleBookProblems(IBook book)
+        {
+            var problems = new List<string>();
+
+            if (String.IsNullOrEmpty(book.Title))
+                problems.Add("Title field is empty.");
+
+            if (String.IsNullOrEmpty(book.Author))
+                problems.Add("Author field is empty.");
+
+            if (String.IsNullOrEmpty(book.Publisher))
+                problems.Add("Publisher field is empty.");
+
+
+            var books = _dbController.GetAllDBBooks();
+
+            var identicalBooksFound = books.Where(i => i.Title == book.Title && i.Year == book.Year && i.Author == book.Author).Any();
+
+            if (identicalBooksFound)
+                problems.Add("Book with same title, author and year found already.");
+
+            if (problems.Any())
+                return (false, String.Join(" ", problems.ToArray()));
+            else
+                return (true, String.Empty);
+        }
+
+        /// <summary>
+        /// Collects problems with book query filters to a string. Return empty string if no problems found.
+        /// </summary>
+        /// <param name="author"></param>
+        /// <param name="year"></param>
+        /// <param name="publisher"></param>
+        /// <returns></returns>
+        public (bool isValid, string problems) PossibleQueryProblems(string? author, decimal? year, string? publisher)
+        {
+            var problems = new List<string>();
+
+            if (author != null)
+            {
+                if (author == "")
+                    problems.Add("Author field is empty.");
+            }
+
+            if (publisher != null)
+            {
+                if (publisher == "")
+                    problems.Add("Publisher field is empty.");
+            }
+
+            if (year != null)
+            {
+                if (IsInteger((decimal)year) == false)
+                    problems.Add("Year needs to be an integer.");
+            }
+
+            if (problems.Any())
+                return (false, String.Join(" ", problems.ToArray()));
+            else
+                return (true, String.Empty);
+        }
+
+        public bool IsInteger(decimal bookId)
+        {
+            return ((bookId % 1) == 0);
+        }
+
+        #endregion validators
     }
 }
