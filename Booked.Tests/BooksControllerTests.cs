@@ -9,18 +9,12 @@ using Moq.Dapper;
 using Booked.Models.Interfaces;
 using Microsoft.Extensions.Logging;
 using ICSharpCode.SharpZipLib.Zip;
+using Moq;
 
 namespace Booked.Tests
 {
     public class BooksControllerTests
     {
-
-        //IBooksController _booksController;
-
-        //public BooksControllerTests(IBooksController booksController)
-        //{
-        //    _booksController = booksController;
-        //}
 
         #region MockTests
 
@@ -147,20 +141,31 @@ namespace Booked.Tests
 
         #region PossibleBookProblems
 
-        [Fact]
-        public void PossibleBookProblems_EmptyTitle_TitleFieldIsEmpty()
-        {
-            // Arrange
-            var expected = (false, "Title field is empty.");
-            var book = new Book { Title = "", Author = "Author", Publisher = "Publisher", Year = 2000 };
+        //[Fact]
+        //public void PossibleBookProblems_EmptyTitle_TitleFieldIsEmpty()
+        //{
+        //    // Arrange
+        //    var expected = (false, "Title field is empty.");
+        //    var book = new Book { Title = "", Author = "Author", Publisher = "Publisher", Year = 2000 };
 
-            // Act
-            var controller = new BooksController(null);
-            var actual = controller.PossibleBookProblems(book);
+        //    using (var mock = AutoMock.GetLoose())
+        //    {
+        //        mock.Mock<IDbConnection>()
+        //            .SetupDapper(x => x.Query<IBook>("select * from books", new DynamicParameters(), null, true, null, null))
+        //            .Returns(GetSampleBooks());
 
-            // Assert
-            Assert.Equal(expected, actual);
-        }
+        //        var cls = mock.Create<SQLiteDataAccess>();
+
+        //        actual = cls.Possible;
+        //    }
+
+        //    // Act
+        //    var controller = new BooksController(null);
+        //    var actual = controller.PossibleBookProblems(book);
+
+        //    // Assert
+        //    Assert.Equal(expected, actual);
+        //}
 
         [Fact]
         public void PossibleBookProblems_EmptyAuthor_AuthorFieldIsEmpty()

@@ -29,7 +29,7 @@ namespace Booked.Utilities
             {
                 using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
                 {
-                    var output = cnn.Query<IBook>("select * from books", new DynamicParameters());
+                    var output = cnn.Query<IBook>("select * from books", new DynamicParameters(), null, true, null, null);
                     return output.ToList();
                 }
             }
@@ -53,7 +53,7 @@ namespace Booked.Utilities
             {
                 using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
                 {
-                    var output = cnn.Query<IBook>("select * from books WHERE id = @id", new DynamicParameters());
+                    var output = cnn.Query<IBook>("select * from books WHERE id = @id", new DynamicParameters(), null, true, null, null);
                     return output.First();
                 }
             }
@@ -125,6 +125,9 @@ namespace Booked.Utilities
         /// <returns></returns>
         private string LoadConnectionString(string id = "Default")
         {
+            var configfile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            var path = configfile.FilePath;
+
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
         }
     }
