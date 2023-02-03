@@ -2,12 +2,15 @@
 using Booked.Models;
 using Booked.Models.Interfaces;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
@@ -127,6 +130,12 @@ namespace Booked.Utilities
         {
             var configfile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             var path = configfile.FilePath;
+
+            Configuration config = ConfigurationManager.OpenExeConfiguration(Assembly.GetExecutingAssembly().Location);
+
+            var conn = config.ConnectionStrings;
+
+            var pathA = config.FilePath;
 
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
         }

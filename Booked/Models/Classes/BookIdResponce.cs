@@ -4,8 +4,8 @@
     {
         public int id { get; set; }
 
-        public BookIdResponce(int id) 
-        { 
+        public BookIdResponce(int id)
+        {
             this.id = id;
         }
     }

@@ -1,15 +1,8 @@
-﻿using Booked.Models;
-using Booked.Models.Classes;
+﻿using Booked.Models.Classes;
 using Booked.Models.Interfaces;
 using Dapper;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 namespace Booked.Utilities

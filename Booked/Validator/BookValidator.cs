@@ -18,7 +18,6 @@
 //            _logger = logger;
 //        }
 
-
 //        /// <summary>
 //        /// Collects problems with the book and adds it to a string. Returns list of possible problems.
 //        /// </summary>
@@ -36,7 +35,6 @@
 
 //            if (String.IsNullOrEmpty(book.Publisher))
 //                problems.Add("Publisher field is empty.");
-
 
 //            var books = _dbController.GetAllDBBooks();
 

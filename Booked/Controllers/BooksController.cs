@@ -3,6 +3,7 @@ using Booked.Models.Interfaces;
 using Booked.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
 
@@ -12,12 +13,24 @@ namespace Booked.Controllers
     [Route("[controller]")]
     public class BooksController : ControllerBase, IBooksController
     {
-        private IDatabaseDataAccess _dataAccess;
+        private readonly IConfiguration _configuration;
+        private readonly ExampleSettings _settings;
 
-        public BooksController(IDatabaseDataAccess dataAccess)
-        {
+        public BooksController(IDatabaseDataAccess dataAccess, 
+            IConfiguration configuration, 
+            IOptions<ExampleSettings> settings)
+        { 
+            _configuration= configuration;
+            _settings = (ExampleSettings?)settings;
             _dataAccess = dataAccess;
         }
+
+        private IDatabaseDataAccess _dataAccess;
+
+        //public BooksController(IDatabaseDataAccess dataAccess)
+        //{
+        //    _dataAccess = dataAccess;
+        //}
 
         #region GET
 
@@ -29,6 +42,8 @@ namespace Booked.Controllers
             if (queryProblems.isValid) //No problems with query parameters
             {
                 var books = _dataAccess.GetAllDbBooks();
+
+                var value = _configuration.GetValue<List<IBook>>("ExampleSettings:ConnectionString");
 
                 //Filter the books based on query
                 if (!String.IsNullOrWhiteSpace(author))

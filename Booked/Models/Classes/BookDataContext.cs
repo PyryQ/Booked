@@ -5,9 +5,9 @@ namespace Booked.Models.Classes
 {
     public class BookDataContext : DbContext
     {
-        public BookDataContext(DbContextOptions<BookDataContext> options):
+        public BookDataContext(DbContextOptions<BookDataContext> options) :
             base(options)
-        {     
+        {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -15,6 +15,6 @@ namespace Booked.Models.Classes
             modelBuilder.UseSerialColumns();
         }
 
-        public DbSet<IBook> Books { get; set;}
+        public DbSet<IBook> Books { get; set; }
     }
 }

@@ -1,21 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Autofac.Extras.Moq;
-using Booked.Models.Classes;
+﻿using Booked.Models.Classes;
 using Booked.Models.Interfaces;
-using Dapper;
-using Xunit;
-using System.Data;
-using Moq;
-using Moq.Dapper;
-using System.Net;
-using Booked.Utilities;
 
 namespace Booked.Tests
 {
     public class SQLiteDataAccessTests
     {
-
         //[Fact]
         //public void GetAllBooks_ValidCall()
         //{
@@ -74,11 +63,10 @@ namespace Booked.Tests
         {
             List<IBook> output = new List<IBook>
             {
-                new Book{ Id = 1, Title = "Title", Author = "Author", Publisher = "Publisher", Year = 2000},          
+                new Book{ Id = 1, Title = "Title", Author = "Author", Publisher = "Publisher", Year = 2000},
             };
 
             return output;
         }
-
     }
 }

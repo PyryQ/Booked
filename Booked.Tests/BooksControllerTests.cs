@@ -73,7 +73,7 @@ namespace Booked.Tests
             var expected = (true, string.Empty);
 
             // Act
-            var controller = new BooksController(null);
+            var controller = new BooksController(null, null, null);
             var actual = controller.PossibleQueryProblems("Author", 2000, "Publisher");
 
             // Assert
@@ -87,7 +87,7 @@ namespace Booked.Tests
             var expected = (false, "Author field is empty.");
 
             // Act
-            var controller = new BooksController(null);
+            var controller = new BooksController(null, null, null);
             var actual = controller.PossibleQueryProblems("", 2000, "Publisher");
 
             // Assert
@@ -101,7 +101,7 @@ namespace Booked.Tests
             var expected = (false, "Publisher field is empty.");
 
             // Act
-            var controller = new BooksController(null);
+            var controller = new BooksController(null, null, null);
             var actual = controller.PossibleQueryProblems("Author", 2000, "");
 
             // Assert
@@ -116,7 +116,7 @@ namespace Booked.Tests
             var expected = (false, "Year needs to be an integer.");
 
             // Act
-            var controller = new BooksController(null);
+            var controller = new BooksController(null, null, null);
             var actual = controller.PossibleQueryProblems(author, year, publisher);
 
             // Assert
@@ -130,7 +130,7 @@ namespace Booked.Tests
             var expected = (false, "Author field is empty. Publisher field is empty. Year needs to be an integer.");
 
             // Act
-            var controller = new BooksController(null);
+            var controller = new BooksController(null, null, null);
             var actual = controller.PossibleQueryProblems("", (decimal)2000.02, "");
 
             // Assert
@@ -175,7 +175,7 @@ namespace Booked.Tests
             var book = new Book { Title = "Title", Author = "", Publisher = "Publisher", Year = 2000 };
 
             // Act
-            var controller = new BooksController(null);
+            var controller = new BooksController(null, null, null);
             var actual = controller.PossibleBookProblems(book);
 
             // Assert
@@ -190,7 +190,7 @@ namespace Booked.Tests
             var book = new Book { Title = "Title", Author = "Author", Publisher = "", Year = 2000 };
 
             // Act
-            var controller = new BooksController(null);
+            var controller = new BooksController(null, null, null);
             var actual = controller.PossibleBookProblems(book);
 
             // Assert
@@ -222,7 +222,7 @@ namespace Booked.Tests
             var book = new Book { Title = "Title", Author = "Author", Publisher = "Publisher", Year = 2000 };
 
             // Act
-            var controller = new BooksController(null);
+            var controller = new BooksController(null, null, null);
             var actual = controller.PossibleBookProblems(book);
 
             // Assert

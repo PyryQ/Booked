@@ -1,6 +1,4 @@
 ﻿using Booked.Models.Interfaces;
-using Newtonsoft.Json;
-using System.Runtime.Serialization;
 
 namespace Booked.Models.Classes
 {
